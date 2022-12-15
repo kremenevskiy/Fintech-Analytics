@@ -1,3 +1,4 @@
+-- When loan replenished
 CREATE OR REPLACE FUNCTION add_loan_payment() RETURNS TRIGGER AS
 $BODY$
 declare
@@ -19,6 +20,7 @@ FOR EACH ROW
 EXECUTE PROCEDURE add_loan_payment();
 
 
+-- When deposit replenished
 CREATE OR REPLACE FUNCTION add_deposit_replenishment() RETURNS TRIGGER AS
 $BODY$
 declare
@@ -37,5 +39,36 @@ AFTER INSERT
 ON Deposit_Replenishment
 FOR EACH ROW
 EXECUTE PROCEDURE add_deposit_replenishment();
+
+
+-- When payment received
+CREATE OR REPLACE FUNCTION on_trans_received() RETURNS TRIGGER AS
+$BODY$
+declare
+    total_sum int;
+BEGIN
+    UPDATE transactions SET is_received = 1 WHERE (transactions.transaction_id = NEW.transaction_id);
+    RETURN new;
+END;
+$BODY$
+language plpgsql;
+
+CREATE TRIGGER trigger_on_p2p_received
+AFTER INSERT
+ON p2p_trans
+FOR EACH ROW
+EXECUTE PROCEDURE on_trans_received();
+
+CREATE TRIGGER trigger_on_p2b_received
+AFTER INSERT
+ON p2b_trans
+FOR EACH ROW
+EXECUTE PROCEDURE on_trans_received();
+
+-- drop trigger if exists trigger_on_p2p_received on p2p_trans;
+-- drop trigger if exists trigger_on_p2b_received on p2b_trans;
+
+
+
 
 
