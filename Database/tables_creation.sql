@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS Loans(
     duration_days_loan INT NOT NULL,
     year_percentage_loan REAL NOT NULL,
     amount_loan_received INT NOT NULL,
-    is_loan_closed BOOLEAN NOT NULL
+    is_loan_closed BOOLEAN DEFAULT False NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Loan_Payment(
@@ -52,10 +52,9 @@ CREATE TABLE IF NOT EXISTS Client_Logs(
 );
 
 CREATE TABLE IF NOT EXISTS ACTIONS(
-    action_id INT PRIMARY KEY NOT NULL,
-    action_name VARCHAR(20) UNIQUE NOT NULL
+    action_id BIGSERIAL PRIMARY KEY NOT NULL,
+    action_name VARCHAR(50) UNIQUE NOT NULL
 );
-
 
 
 CREATE TABLE IF NOT EXISTS Client_Address(
@@ -80,10 +79,9 @@ CREATE TABLE IF NOT EXISTS Client_Identify_Document(
 
 
 CREATE TABLE IF NOT EXISTS Client_PersonalInfo(
-    client_id INT NOT NULL,
+    client_id BIGINT NOT NULL,
     client_name VARCHAR(30) NOT NULL,
     client_surname VARCHAR(30) NOT NULL,
-    client_middle_name VARCHAR(30),
     date_of_birth DATE,
     place_of_birth VARCHAR(40),
     date_added_personal_info TIMESTAMP NOT NULL
@@ -94,7 +92,7 @@ CREATE TABLE IF NOT EXISTS Client_Cards(
     client_id INT NOT NULL,
     card_holder_name VARCHAR(30) NOT NULL,
     card_number BIGINT NOT NULL,
-    card_date DATE NOT NULL,
+    card_date VARCHAR(5) NOT NULL,
     date_added_client_card TIMESTAMP NOT NULL
 );
 
