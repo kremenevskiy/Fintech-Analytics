@@ -96,15 +96,33 @@ CREATE TABLE IF NOT EXISTS Client_Cards(
     date_added_client_card TIMESTAMP NOT NULL
 );
 
-
-
-CREATE TABLE IF NOT EXISTS Transactions(
+CREATE TABLE IF NOT EXISTS Transaction_extended(
     transaction_id BIGSERIAL PRIMARY KEY NOT NULL,
     client_id INT NOT NULL,
     type_id INT NOT NULL,
     payee_phone VARCHAR(20) NOT NULL,
     payee_fullname VARCHAR(40) NOT NULL,
-    is_received BOOLEAN NOT NUll,
+    is_received BOOLEAN DEFAULT False NOT NUll,
+    trans_time_created TIMESTAMP NOT NULL,
+
+    trans_amount INT NOT NULL,
+    trans_amount_rubles INT NOT NULL,
+    commission INT NOT NULL,
+    currency_from VARCHAR(5) NOT NULL,
+    currency_to VARCHAR(5) NOT NULL,
+    exchange_rate REAL NOT NULL,
+
+    country_from VARCHAR(10) NOT NULL,
+    country_to VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Transactions(
+    transaction_id BIGINT PRIMARY KEY NOT NULL,
+    client_id INT NOT NULL,
+    type_id INT NOT NULL,
+    payee_phone VARCHAR(20) NOT NULL,
+    payee_fullname VARCHAR(40) NOT NULL,
+    is_received BOOLEAN DEFAULT False NOT NUll,
     trans_time_created TIMESTAMP NOT NULL
 );
 
