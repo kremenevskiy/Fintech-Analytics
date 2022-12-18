@@ -74,8 +74,8 @@ def make_client_identify_document():
     date_issued = fake.date()
     place_issued = (fake.street_address()).replace("'", "")[:19]
     country_issued = (fake.country()).replace("'", "")[:19]
-    date_added = make_noisy_date(datetime.now()).strftime("%Y-%m-%d %H:%M:%S")
-    return passport_serial, date_issued, place_issued, country_issued, date_added
+    date_added_client_identify_document = make_noisy_date(datetime.now()).strftime("%Y-%m-%d %H:%M:%S")
+    return passport_serial, date_issued, place_issued, country_issued, date_added_client_identify_document
 
 
 def make_client_cards():
@@ -189,7 +189,7 @@ with DAG(
     clients_identify_documents = [[client_id, *make_client_identify_document()] for client_id in clients_ids]
     clients_identify_documents = sorted(clients_identify_documents, key=lambda x: x[5])
     clients_identify_documents_sqls = "".join([
-        f"INSERT INTO client_identify_document (client_id, passport_serial, date_issued, place_issued, country_issued, date_added)"
+        f"INSERT INTO client_identify_document (client_id, passport_serial, date_issued, place_issued, country_issued, date_added_client_identify_document)"
         f" VALUES ({record[0]}, '{record[1]}', '{record[2]}', '{record[3]}', '{record[4]}', '{record[5]}');"
         for record in clients_identify_documents])
 
