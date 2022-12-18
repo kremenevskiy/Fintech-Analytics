@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS Loans(
     is_loan_closed BOOLEAN DEFAULT False NOT NULL
 );
 
+
 CREATE TABLE IF NOT EXISTS Loan_Payment(
     loan_id BIGINT REFERENCES Loans(loan_id),
     amount_loan_payment int NOT NULL,
@@ -42,8 +43,6 @@ CREATE TABLE IF NOT EXISTS Clients(
 );
 
 
-
-
 CREATE TABLE IF NOT EXISTS Client_Logs(
     client_id INT NOT NULL,
     action_date TIMESTAMP NOT NULL,
@@ -74,7 +73,7 @@ CREATE TABLE IF NOT EXISTS Client_Identify_Document(
     date_issued TIMESTAMP,
     place_issued VARCHAR(20),
     country_issued VARCHAR(20),
-    date_added TIMESTAMP NOT NULL
+    date_added_client_identify_Document TIMESTAMP NOT NULL
 );
 
 
@@ -99,7 +98,7 @@ CREATE TABLE IF NOT EXISTS Client_Cards(
 CREATE TABLE IF NOT EXISTS Transaction_extended(
     transaction_id BIGSERIAL PRIMARY KEY NOT NULL,
     client_id INT NOT NULL,
-    type_id INT NOT NULL,
+    trans_type VARCHAR(20),
     payee_phone VARCHAR(20) NOT NULL,
     payee_fullname VARCHAR(40) NOT NULL,
     is_received BOOLEAN DEFAULT False NOT NUll,
@@ -116,10 +115,11 @@ CREATE TABLE IF NOT EXISTS Transaction_extended(
     country_to VARCHAR(10) NOT NULL
 );
 
+drop table transactions;
 CREATE TABLE IF NOT EXISTS Transactions(
     transaction_id BIGINT PRIMARY KEY NOT NULL,
     client_id INT NOT NULL,
-    type_id INT NOT NULL,
+    trans_type VARCHAR(20),
     payee_phone VARCHAR(20) NOT NULL,
     payee_fullname VARCHAR(40) NOT NULL,
     is_received BOOLEAN DEFAULT False NOT NUll,
@@ -161,52 +161,32 @@ CREATE TABLE IF NOT EXISTS  Trans_Forwarding(
 
 CREATE TABLE IF NOT EXISTS Trans_Type(
     type_id BIGSERIAL PRIMARY KEY NOT NULL,
-    type_name VARCHAR(10) NOT NULL,
+    type_name VARCHAR(10) UNIQUE NOT NULL,
     started_from VARCHAR(10) NOT NULL
 );
-
 
 
 CREATE TABLE IF NOT EXISTS  P2P_Trans(
     transaction_id INT NOT NULL,
     payee_card_hash VARCHAR(30) NOT NULL,
-    time_received TIMESTAMP NOT NULL
+    time_received_p2p TIMESTAMP NOT NULL
 );
 
 
 CREATE TABLE IF NOT EXISTS  P2B_Trans(
     transaction_id INT NOT NULL,
-    time_received TIMESTAMP NOT NULL,
+    time_received_p2b TIMESTAMP NOT NULL,
     bank VARCHAR(30) NOT NULL,
     payee_real_fullname VARCHAR(30) NOT NULL,
     payee_real_phone VARCHAR(30) NOT NULL
 );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+drop table analytic_runs;
+CREATE TABLE IF NOT EXISTS Analytic_runs(
+    last_unloaded_trans_id INT NOT NULL,
+    date_unloading_run TIMESTAMP NOT NULL,
+    cnt_transactions_pushed INT NOT NULl
+);
 
 
 
