@@ -15,6 +15,37 @@ from client_identify_document;
 select *
 from transaction_extended;
 
+
+drop table client_logs;
+drop table client_address;
+drop table client_identify_document;
+drop table client_personalinfo;
+drop table deposit_replenishment;
+drop table loan_payment;
+drop table loans;
+drop table deposits;
+drop table client_cards;
+drop table clients;
+drop table trans_forwarding;
+drop table trans_amounts;
+drop table transaction_extended;
+drop table p2b_trans;
+drop table p2p_trans;
+drop table transactions;
+drop table analytic_runs;
+drop table analytic_table;
+
+
+select count(*)
+from deposits;
+
+select count(*)
+from loans;
+
+select count(*)
+from client_identify_document;
+
+
 select *
 from p2p_trans;
 select *
@@ -29,6 +60,10 @@ drop table p2b_trans;
 
 select *
 from transactions;
+
+select *
+    from analytic_runs;
+
 
 
 drop table client_personalinfo;
@@ -185,3 +220,80 @@ from transactions;
 select * from analytic_table
 order by transaction_id desc
 limit(5);
+
+
+SELECT
+  type_name, COUNT(trans_type)
+FROM
+  analytic_table
+GROUP BY
+  type_name;
+
+
+select count(*) from analytic_table;
+select count(*)
+from analytic_table
+where is_received = True;
+
+SELECT coalesce(type_name,'Not received'), count(*)
+FROM analytic_table
+GROUP BY type_name;
+
+Select date_trunc('hour', date_created), count(*) from analytic_table group by 1;
+
+
+select count(*) * 0.01
+from clients;
+
+
+select * from analytic_runs;
+
+
+select * from clients;
+
+select * from transactions;
+
+select count(*)
+from clients
+where client_id not in (select client_id from transactions);
+
+delete from clients where
+    (client_id not in (select client_id from transactions)) and
+    (client_id not in (select client_id from deposits)) and
+    (client_id not in (select client_id from loans));
+
+with cte as (
+select client_id from loans
+union all select client_id from deposits
+union all select client_id from transactions
+union all select client_id from client_identify_document
+union all select client_id from client_personalinfo
+union all select client_id from client_address
+union all select client_id from client_cards
+union all select client_id from client_logs)
+delete from clients where client_id not in (select client_id from cte limit 3);
+select client_id from cte limit 3;
+select *
+from cte
+where client_id = 2178964;
+
+drop table clients;
+
+
+
+
+
+select *
+from deposits
+where client_id = 2178964;
+
+
+
+select count(*)
+from clients;
+
+select count(*)
+from transactions;
+
+
+select * from clients;

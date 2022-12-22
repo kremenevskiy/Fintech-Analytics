@@ -61,8 +61,8 @@ REFERENCES Transactions (transaction_id);
 
 ALTER TABLE transactions
 ADD CONSTRAINT constraint_fk_trans_type_transaction
-FOREIGN KEY (type_id)
-REFERENCES trans_type (type_id);
+FOREIGN KEY (trans_type)
+REFERENCES trans_type (type_name);
 
 
 ALTER TABLE p2p_trans

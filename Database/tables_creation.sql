@@ -115,7 +115,6 @@ CREATE TABLE IF NOT EXISTS Transaction_extended(
     country_to VARCHAR(10) NOT NULL
 );
 
-drop table transactions;
 CREATE TABLE IF NOT EXISTS Transactions(
     transaction_id BIGINT PRIMARY KEY NOT NULL,
     client_id INT NOT NULL,
@@ -181,7 +180,7 @@ CREATE TABLE IF NOT EXISTS  P2B_Trans(
     payee_real_phone VARCHAR(30) NOT NULL
 );
 
-drop table analytic_runs;
+
 CREATE TABLE IF NOT EXISTS Analytic_runs(
     last_unloaded_trans_id INT NOT NULL,
     date_unloading_run TIMESTAMP NOT NULL,
