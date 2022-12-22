@@ -12,7 +12,6 @@ from airflow.utils.trigger_rule import TriggerRule
 
 import psycopg2
 import numpy as np
-from emulate_clients_dag import make_noisy_date
 
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as F
@@ -199,3 +198,8 @@ with DAG(
     on_unload_all_transactions >> make_sql_for_analytic_table
     on_unload_latest_transactions >> make_sql_for_analytic_table
     make_sql_for_analytic_table >> push_results_to_analytic_table >> end_dag
+
+
+
+
+

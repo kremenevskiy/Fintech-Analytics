@@ -9,12 +9,15 @@ from airflow.providers.postgres.operators.postgres import PostgresOperator
 
 import psycopg2
 import numpy as np
-from emulate_clients_dag import make_noisy_date
+
 
 import logging
 
 fake = Faker()
-MINUTES_DAG_NEW_RUN = 5
+MINUTES_DAG_NEW_RUN = 20
+
+def make_noisy_date(date):
+    return date + relativedelta(seconds=random.randint(0, 59 * MINUTES_DAG_NEW_RUN))
 
 
 def get_verified_clients_ids(p=0.01):
@@ -97,7 +100,7 @@ with DAG(
     catchup=False,
 ) as dag:
 
-    verified_clients_ids = get_verified_clients_ids()
+    verified_clients_ids = get_verified_clients_ids(p=random.uniform(0.01, 0.5))
     available_trans_types_ids = get_available_trans_types()
 
     generated_trans_types = random.choices(available_trans_types_ids, k=len(verified_clients_ids))
@@ -111,7 +114,7 @@ with DAG(
 
 
     # generate p2p clients
-    trans_unreceived_ids = get_unreceived_transactions()
+    trans_unreceived_ids = get_unreceived_transactions(p=random.uniform(0.01, 0.2))
     if len(trans_unreceived_ids) > 0:
         p2p_received = [make_transaction_p2p_received(trans_id) for trans_id in trans_unreceived_ids]
         p2p_received_sqls = "".join([
@@ -122,7 +125,7 @@ with DAG(
         p2p_received_sqls = ''
 
     # generate p2b clients
-    trans_unreceived_ids = list(set(get_unreceived_transactions()) - set(trans_unreceived_ids))
+    trans_unreceived_ids = list(set(get_unreceived_transactions(p=random.uniform(0.01, 0.1))) - set(trans_unreceived_ids))
     if len(trans_unreceived_ids) > 0:
         p2b_received = [make_transaction_p2b_received(trans_id) for trans_id in trans_unreceived_ids]
         p2b_received_sqls = "".join([
